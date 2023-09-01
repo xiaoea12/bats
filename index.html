@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二创小徐</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .shell {
+            width: 100%;
+            position: relative;
+            padding: 80px 0;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .shell:before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(99, 99, 99, 0.8);
+            content: "";
+        }
+
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .title {
+            color: #fff;
+            font-size: 46px;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .timeline {
+            display: flex;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            flex-direction: column;
+            max-width: 700px;
+            position: relative;
+        }
+
+        .content-title {
+            font-weight: normal;
+            font-size: 66px;
+            margin: -10px 0 0 0;
+            transition: 0.4s;
+            padding: 0 10px;
+            box-sizing: border-box;
+            color: #fff;
+        }
+
+        .content-desc {
+            margin: 0;
+            font-size: 15px;
+            box-sizing: border-box;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 25px;
+        }
+
+        .timeline:before {
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            margin-left: -1px;
+            content: "";
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .item {
+            padding: 40px 0;
+            opacity: 0.3;
+            filter: blur(2px);
+            transition: 0.5s;
+            box-sizing: border-box;
+            width: calc(50% - 40px);
+            display: flex;
+            position: relative;
+            transform: translateY(-80px);
+        }
+
+        .item:before {
+            /* 设置在伪元素before中的内容  */
+            content: attr(data-text);
+            letter-spacing: 3px;
+            width: 100%;
+            position: absolute;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            border-left: 2px solid rgba(255, 255, 255, 0.5);
+            top: 70%;
+            margin-top: -5px;
+            padding-left: 15px;
+            opacity: 0;
+            right: calc(-100% - 56px);
+            font: 900 20px '';
+            letter-spacing: 5px;
+        }
+
+        .item:nth-child(even) {
+            align-self: flex-end;
+        }
+
+        .item:nth-child(even):before {
+            right: auto;
+            text-align: right;
+            left: calc(-100% - 56px);
+            padding-left: 0;
+            border-left: none;
+            border-right: 2px solid rgba(255, 255, 255, 0.5);
+            padding-right: 15px;
+        }
+
+        .item--active {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0px);
+        }
+
+        .item--active:before {
+            top: 50%;
+            transition: 0.3s all 0.2s;
+            opacity: 1;
+        }
+
+        .item--active .content-title {
+            margin: -50px 0 20px 0;
+        }
+
+        .img {
+            max-width: 100%;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            letter-spacing: 5px;
+            margin: 10px 0 0 0;
+            font-weight: normal;
+        }
+
+        .footer {
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #999;
+            display: inline-block;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .item {
+                align-self: baseline !important;
+                width: 100%;
+                padding: 0 30px 150px 80px;
+            }
+
+            .item:before {
+                left: 10px !important;
+                padding: 0 !important;
+                top: 50px;
+                text-align: center !important;
+                width: 60px;
+                border: none !important;
+            }
+
+            .item:last-child {
+                padding-bottom: 40px;
+            }
+        }
+
+        @media only screen and (max-width: 767px) {
+            .timeline:before {
+                left: 40px;
+            }
+        }
+        .button {
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            text-decoration: none;
+            font-family: sans-serif;
+            font-weight: 600;
+            font-size: 2em;
+            padding: 0.75em 1em;
+            color: blue;
+            border: 0.15em solid blue;
+            border-radius: 2em;
+            transition: 4s;
+        }
+
+        .button:before,
+        .button:after {
+            content: "";
+            position: absolute;
+            top: -1.5em;
+            z-index: -1;
+            width: 200%;
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 40%;
+            background-color: rgba(0, 0, 255, 0.25);
+            transition: 4s;
+        }
+
+        .button:before {
+            left: -80%;
+            transform: translate3d(0, 5em, 0) rotate(-340deg);
+        }
+
+        .button:after {
+            right: -80%;
+            transform: translate3d(0, 5em, 0) rotate(390deg);
+        }
+
+        .button:hover,
+        .button:focus {
+            color: white;
+        }
+
+        .button:hover:before,
+        .button:hover:after,
+        .button:focus:before,
+        .button:focus:after {
+            transform: none;
+            background-color: rgba(0, 0, 255, 0.75);
+        }
+        
+ 
+    </style>
+</head>
+
+<body>
+
+    <div class="shell" id="shell">
+        <div class="header">
+            <h2 class="title">小田の生活</h2>
+            <h3 class="subtitle">有彩蛋可以自己猜</h3>
+        </div>
+        <div class="timeline">
+
+
+            <div class="item" data-text="
+            神
+            明
+            少
+            女">
+                <div class="content">
+                    <img class="img" src="./img/01.jpg" />
+                    <h2 class="content-title">♥2023♥</h2>
+                    <p class="content-desc">
+                       这是我觉得最好看的一张壁纸了不知道为什么有一种莫名其妙的感觉或许和回忆有关罢了。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="照
+            亮
+            你
+            的
+            心">
+                <div class="content">
+                    <img class="img" src="./img/02.jpg" />
+                    <h2 class="content-title">2022</h2>
+                    <p class="content-desc">
+                        当时那天清晨我决定改变自己于是早晨开始去跑....可惜的是没坚持多久哈哈哈，这张照片也算是纪念吧。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="我
+            和
+            她">
+                <div class="content">
+                    <img class="img" src="./img/03.jpg" />
+                    <h2 class="content-title">9/4</h2>
+                    <p class="content-desc">
+                        当时幻想着自己的第一场恋爱什么时候来临，于是在摸鱼的时候随便画了一幅画，当时还幻想着甜甜的恋爱。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="心
+            与愿违
+            梦之残">
+                <div class="content">
+                    <img class="img" src="./img/04.jpg" />
+                    <h2 class="content-title">9/10</h2>
+                    <p class="content-desc">
+                        花落忘川情彼岸，当时去爬山遇到了彼岸花，旁边就是寺庙，咱也不太懂寓意如何。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="彩
+            色
+            水
+            母">
+                <div class="content">
+                    <img class="img" src="./img/05.jpg" />
+                    <h2 class="content-title">9/15</h2>
+                    <p class="content-desc">
+                        如果你爱上了某个星球的一朵花。那么，只要在夜晚仰望星空，就能看到漫天的水母，哈哈哈哈哈哈哈哈哈哈哈哈，因为灯光的缘故水母是七彩的。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="义
+            乌
+            市">
+                <div class="content">
+                    <img class="img" src="./img/06.jpg" />
+                    <h2 class="content-title">9/27</h2>
+                    <p class="content-desc">
+                        你们可能不信这是我在义乌市一个楼上拍的照片，但实际是我中午拍的通过ps合成的，我觉得挺酷的。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="夕
+            阳">
+                <div class="content">
+                    <img class="img" src="./img/07.jpg" />
+                    <h2 class="content-title">10/20</h2>
+                    <p class="content-desc">
+                        一个正常不过的下班路上拍到了一天最美的时刻，美好的时光像夕阳一样短暂，转瞬即逝，像爱情一样。U•ェ•U
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="菊
+            花
+            海
+            洋">
+                <div class="content">
+                    <img class="img" src="./img/08.jpg" />
+                    <h2 class="content-title">23/5/1</h2>
+                    <p class="content-desc">
+                       这花好像叫大滨菊，但是这朵花的叶子翘起来了，就像是有些人偏偏在这个时候出现一样，可惜没有。❀
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="流
+            浪
+            猫">
+                <div class="content">
+                    <img class="img" src="./img/09.jpg" />
+                    <h2 class="content-title">12/31</h2>
+                    <p class="content-desc">
+                       小猫能有什么坏心思呢，只不过是在饿了的时候遇到了正在晒太阳的我，我随意的一个举动它便记住了我，哪怕时隔一年它还记着。🐱
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="你
+            的
+            月
+            亮">
+                <div class="content">
+                    <img class="img" src="./img/10.jpg" />
+                    <h2 class="content-title">12/31</h2>
+                    <p class="content-desc">
+                       不是有句话叫如果把月亮摘下来你就嫁给我吗，现在呢？或许这句话本来就是不愿意的谎言吧。
+                    </p>
+                </div>
+            </div>
+
+
+            <!--  -->
+            <div class="item" data-text="昏
+            鸦">
+                <div class="content">
+                    <img class="img" src="./img/11.jpg" />
+                    <h2 class="content-title">23/1/7</h2>
+                    <p class="content-desc">
+                       这幅画让我这个文盲想起来一句诗句：“枯藤老树昏鸦.....夕阳西下，断肠人在天涯”，这也是我在家乡拍的。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="好
+            厨
+            艺">
+                <div class="content">
+                    <img class="img" src="./img/12.jpg" />
+                    <h2 class="content-title">23/1/29</h2>
+                    <p class="content-desc">
+                        你猜这虾放没放盐U•ェ•U，哈哈哈哈猜不到吧，放了。没想到我随手炒的一盘，在阳光照射下如此令人馋涎欲滴。ˋ( ° ▽、° ) 
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="结
+            婚">
+                <div class="content">
+                    <img class="img" src="./img/13.jpg" />
+                    <h2 class="content-title">1/20</h2>
+                    <p class="content-desc">
+                        朋友的哥哥结婚了，我才意识到，不是已经长大了，我马上感觉自己要退休了（18岁）。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="你
+            的
+            露
+            珠">
+                <div class="content">
+                    <img class="img" src="./img/14.jpg" />
+                    <h2 class="content-title">1/29</h2>
+                    <p class="content-desc">
+                        可以这么形容，三年前的你的眼睛跟露珠一样，现在怎么没有光了，失去了什么？
+                        青春！
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="小
+            兔
+            子">
+                <div class="content">
+                    <img class="img" src="./img/15.jpg" />
+                    <h2 class="content-title">1/30</h2>
+                    <p class="content-desc">
+                        兔子想要的是自由吗，或许它想成为红烧兔头被我的胃永远记着，咳咳，我自从得到它，就带着它到处玩玩。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="小
+            白
+            兔
+            终">
+                <div class="content">
+                    <img class="img" src="./img/16.jpg" />
+                    <h2 class="content-title">1/31</h2>
+                    <p class="content-desc">
+                        不出意料它仅仅陪我了一个星期后面就打喷嚏冻死了，果然我什么都养不活，太fw了。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="三
+            糕
+            传
+            奇">
+                <div class="content">
+                    <img class="img" src="./img/17.jpg" />
+                    <h2 class="content-title">2/5</h2>
+                    <p class="content-desc">
+                        我感觉我发现了新大陆，就是零下十度的雪糕额外好吃，因为不会化。我一口气炫完。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="小
+            胖">
+                <div class="content">
+                    <img class="img" src="./img/18.jpg" />
+                    <h2 class="content-title">迪迦！</h2>
+                    <p class="content-desc">
+                        我不能成为光拯救世界，就像你不能留在我身边一样，可恶都说了恋爱脑不能上网。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="失
+            约
+            的
+            海">
+                <div class="content">
+                    <img class="img" src="./img/19.jpg" />
+                    <h2 class="content-title">7/5</h2>
+                    <p class="content-desc">
+                      完美只能是一种理想，而失约的海就是现实，总有人不信守承诺优先退出这段故事。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="你
+            的
+            极
+            光">
+                <div class="content">
+                    <img class="img" src="./img/20.jpg" />
+                    <h2 class="content-title">8/1</h2>
+                    <p class="content-desc">
+                        所有的约定都是在哄小屁孩的而你就是你那个，能信守承诺的人都被运气好遇到了。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="海！
+            海！海!">
+                <div class="content">
+                    <img class="img" src="./img/21.jpg" />
+                    <h2 class="content-title">2021</h2>
+                    <p class="content-desc">
+                       不是所有的鱼都会生活在同一片海里,不是所有人都是人。
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="♥
+            彩
+            蛋
+            ♥">
+                <div class="content">
+                    <img class="img" src="./img/22.jpg" />
+                    <h2 class="content-title">未知</h2>
+                    <p class="content-desc">
+                       这幅画有一个刀有兴趣的话就有兴趣吧什么刀自己猜。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer"><a href="http://localhost:5173/" class="button">听歌小程序</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        (function ($) {
+            $.fn.timeline = function () {
+                var selectors = {
+                    id: $(this),
+                    item: $(this).find(".item"),
+                    activeClass: "item--active",
+                    img: ".img"
+                };
+                // 将第一个时间轴项目激活，并设置时间轴背景图片为第一个项目的图片
+                selectors.item.eq(0).addClass(selectors.activeClass);
+                selectors.id.css(
+                    "background-image",
+                    "url(" +
+                    selectors.item
+                        .first()
+                        .find(selectors.img)
+                        .attr("src") +
+                    ")"
+                );
+                // 获取时间轴项目的总数
+                var itemLength = selectors.item.length;
+                // 当页面滚动时，触发滚动事件
+                $(window).scroll(function () {
+                    var max, min;
+                    // 获取页面滚动的距离
+                    var pos = $(this).scrollTop();
+                    selectors.item.each(function (i) {
+                        // 获取当前时间轴项目的最小和最大高度
+                        min = $(this).offset().top;
+                        max = $(this).height() + $(this).offset().top;
+                        var that = $(this);
+                        // 如果滚动到最后一个项目，并且超过了当前项目高度的一半，
+                        // 则将最后一个项目设置为激活状态，并设置背景图片为最后一个项目的图片
+                        if (i == itemLength - 2 && pos > min + $(this).height() / 2) {
+                            selectors.item.removeClass(selectors.activeClass);
+                            selectors.id.css(
+                                "background-image",
+                                "url(" +
+                                selectors.item
+                                    .last()
+                                    .find(selectors.img)
+                                    .attr("src") +
+                                ")"
+                            );
+                            selectors.item.last().addClass(selectors.activeClass);
+                        }
+                        // 如果当前滚动位置在当前项目的最小和最大高度之间，
+                        // 则将当前项目设置为激活状态，并设置背景图片为当前项目的图片
+                        else if (pos <= max - 10 && pos >= min) {
+                            selectors.id.css(
+                                "background-image",
+                                "url(" +
+                                $(this)
+                                    .find(selectors.img)
+                                    .attr("src") +
+                                ")"
+                            );
+                            selectors.item.removeClass(selectors.activeClass);
+                            $(this).addClass(selectors.activeClass);
+                        }
+                    });
+                });
+            };
+        })(jQuery)
+        /*
+        最后，我们调用 timeline 插件并传入时间轴的 ID 作为参数。
+        这将启用时间轴插件并为该时间轴绑定滚动事件。
+        */
+        $("#shell").timeline();
+    </script>
+</body>
+
+</html>
